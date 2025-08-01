@@ -1,0 +1,21 @@
+# .gcloudignore - Files to exclude from Cloud Build context
+# Include Dockerfile explicitly (this line is a comment, Dockerfile is included by default)
+
+# Exclude unnecessary files for faster uploads
+.git/
+.gitignore
+*.md
+setup-commands.md
+
+# Exclude local development files
+.env
+.DS_Store
+*.log
+
+# Keep these files for the build:
+# Dockerfile (included)
+# package.json (included) 
+# package-lock.json (included)
+# index.js (included)
+# middleware/ (included)
+# cloudbuild.yaml (included) 
