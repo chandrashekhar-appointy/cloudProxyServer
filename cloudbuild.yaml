@@ -1,15 +1,4 @@
 steps:
-  # Debug step - see what files are available
-  - name: 'alpine'
-    entrypoint: 'sh'
-    args:
-      - '-c'
-      - |
-        echo "=== FILES IN WORKSPACE ===" &&
-        ls -la &&
-        echo "=== CHECKING FOR DOCKERFILE ===" &&
-        ls -la | grep -i dockerfile || echo "No Dockerfile found!"
-  
   - name: 'node:22-alpine'
     entrypoint: 'sh'
     args:
@@ -22,7 +11,7 @@ steps:
         ls -la
     
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['build', '-t', 'europe-west1-docker.pkg.dev/focal-psyche-460009-a5/aptproxy/aptproxy-server:$SHORT_SHA', '.']
+    args: ['build', '-f', 'DOCKERFILE', '-t', 'europe-west1-docker.pkg.dev/focal-psyche-460009-a5/aptproxy/aptproxy-server:$SHORT_SHA', '.']
   
   # Step 3: Push image to Artifact Registry
   - name: 'gcr.io/cloud-builders/docker'
