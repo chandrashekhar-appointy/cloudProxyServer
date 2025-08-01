@@ -1,0 +1,29 @@
+steps:
+  
+  - name: 'node:22-alpine'
+    entrypoint: 'sh'
+    args:
+      - '-c'
+      - |
+        echo "Installing dependencies..." &&
+        npm ci --only=production &&
+        echo "Build completed successfully!" &&
+        echo "Commit SHA: $SHORT_SHA" &&
+        ls -la
+    
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['build', '-t', 'europe-west1-docker.pkg.dev/focal-psyche-460009-a5/aptproxy/aptproxy-server:$SHORT_SHA', '.']
+  
+  # Step 3: Push image to Artifact Registry
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', 'europe-west1-docker.pkg.dev/focal-psyche-460009-a5/aptproxy/aptproxy-server:$SHORT_SHA']
+
+# Optional: Configure timeout and machine type
+# options:
+#   logging: CLOUD_LOGGING_ONLY
+#   machineType: 'E2_STANDARD_2'
+
+# Optional: Tag the image with 'latest' as well
+images:
+  - 'europe-west1-docker.pkg.dev/focal-psyche-460009-a5/aptproxy/aptproxy-server:$SHORT_SHA'
+  - 'europe-west1-docker.pkg.dev/focal-psyche-460009-a5/aptproxy/aptproxy-server:latest'
