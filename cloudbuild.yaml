@@ -21,7 +21,6 @@ steps:
 options:
   logging: CLOUD_LOGGING_ONLY
 
-# Optional: Tag the image with 'latest' as well
+# Image built and pushed
 images:
   - 'europe-west1-docker.pkg.dev/focal-psyche-460009-a5/aptproxy/aptproxy-server:$SHORT_SHA'
-  - 'europe-west1-docker.pkg.dev/focal-psyche-460009-a5/aptproxy/aptproxy-server:latest'
