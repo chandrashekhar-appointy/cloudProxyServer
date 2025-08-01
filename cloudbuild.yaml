@@ -19,9 +19,8 @@ steps:
     args: ['push', 'europe-west1-docker.pkg.dev/focal-psyche-460009-a5/aptproxy/aptproxy-server:$SHORT_SHA']
 
 # Optional: Configure timeout and machine type
-# options:
-#   logging: CLOUD_LOGGING_ONLY
-#   machineType: 'E2_STANDARD_2'
+options:
+  logging: CLOUD_LOGGING_ONLY
 
 # Optional: Tag the image with 'latest' as well
 images:
