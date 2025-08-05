@@ -4,6 +4,9 @@ import {Pool} from "pg";
 import dotenv from "dotenv";
 import authenticationToken from "./middleware/authentication.js";
 import jwt from "jsonwebtoken";
+import bcrypt from 'bcrypt'
+import { PrismaClient } from './generated/prisma/index.js'
+const prisma = new PrismaClient();
 
 dotenv.config();
 
@@ -54,10 +57,51 @@ app.post('/poolQuery', authenticationToken, async(req, res) => {
     res.json(response.rows)
 })
 
-app.post('/createToken', (req, res) => {
-    const {name, position} = req.body; 
-    const token = jwt.sign({name, position} , process.env.JWT_SECRET )
-    res.json({token})
+app.post('/signin', async (req, res) => {
+    try{
+        const {name, username, password} = req.body; 
+        const hashed = await bcrypt.hash(password, 10);
+        const user = await prisma.user.create({
+            data: {
+                name,
+                username,
+                password: hashed
+            }
+        })
+        console.log("User created", user);
+        const token = jwt.sign({username} , process.env.JWT_SECRET )
+        console.log("Token created", token);
+        res.json({token})
+    }
+    catch(e){
+        console.error( "Error creating user" ,e)
+    }
+    finally{
+        await prisma.$disconnect();
+    }
+})
+
+app.post('/login', async (req, res) => {
+    try{
+        const {username, password} = req.body;
+        const user = await prisma.user.findFirst({
+            where: {
+                username
+            }
+        })
+        if(!user){ res.json({ message: "User not found. "})}
+        const success = await bcrypt.compare(password, user.password);
+        if(!success){
+            res.json({
+                message: "Invalid password"
+            })
+        }
+        const token = jwt.sign({username}, process.env.JWT_SECRET)
+        res.json({token})
+    }
+    catch(e){
+        console.log("Error while logging in : ", e)
+    }
 })
 
 app.get('/poolStats', (req, res) => {
