@@ -13,6 +13,7 @@ RUN npm ci --only=production
 # Copy application code
 COPY . . 
 
+RUN npx prisma generate
 # Create non-root user for security
 RUN addgroup -g 1001 -S nodejs && \
     adduser -S nodejs -u 1001
