@@ -57,7 +57,7 @@ app.post('/poolQuery', authenticationToken, async(req, res) => {
     res.json(response.rows)
 })
 
-app.post('/signin', async (req, res) => {
+app.post('/signup', async (req, res) => {
     try{
         const {name, username, password} = req.body; 
         const hashed = await bcrypt.hash(password, 10);
