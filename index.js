@@ -8,7 +8,7 @@ import bcrypt from 'bcrypt'
 import { PrismaClient } from './generated/prisma/index.js'
 const prisma = new PrismaClient();
 
-dotenv.config();
+dotenv.config({ override: true });
 
 const app = express();
 app.use(express.json());
